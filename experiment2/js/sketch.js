@@ -22,6 +22,7 @@ const sketch1 = (pInst) => {
     HEIGHT = canvasContainerA.height()
     WIDTH = canvasContainerA.width()
     canvas.parent("canvas-container");
+    pInst.angleMode(pInst.DEGREES)
   };
   pInst.draw = () => {
     // Fill background sky with blue color.
@@ -38,10 +39,38 @@ const sketch1 = (pInst) => {
     let sunSize = 150
     let sun = pInst.ellipse(sunWidth,sunHeight,sunSize,sunSize)
 
-    // Draw the center sunflower
+    // Draw the center sunflower 
     // Stem
-    // Face
-    // Petals
+    let stemThickness = 25
+    let stemHeight = 120
+    let centerWidth = WIDTH/2
+    pInst.fill(0,100,0)
+    let stem = pInst.quad(centerWidth-stemThickness/2,horizonHeight-stemHeight,centerWidth + stemThickness/2,horizonHeight-stemHeight,centerWidth+stemThickness/2,horizonHeight,centerWidth-stemThickness/2,horizonHeight)
+    
+    // Face Setup
+    let faceSize = 75
+    
+    // Drawing Petals under face
+    let petalSize = 30
+    let numPetals = 12
+    let faceX = centerWidth
+    let faceY = horizonHeight-stemHeight-faceSize/2
+    
+    pInst.fill(200,200,0)
+    // GPT helped me figure out what was going wrong with my push() and pop(), and it
+      // suggested the use of translate() which made what I wanted to do a lot easier.
+      // Conversation link: https://chatgpt.com/share/678d6a3c-8c18-800b-a058-e80e40556a07
+    for(let i = 0; i < 360; i += 360/numPetals)
+    {
+      pInst.push()
+      pInst.translate(faceX,faceY)
+      pInst.rotate(i)
+      pInst.quad(0,0,-petalSize/2,-petalSize,0,-petalSize*2,petalSize/2,-petalSize)
+      pInst.pop()
+    }
+    // Draw face on top of petals
+    pInst.fill(100,100,0)
+    let face = pInst.ellipse(centerWidth, horizonHeight-stemHeight-faceSize/2,faceSize,faceSize)
   };
 };
 new p5(sketch1);
