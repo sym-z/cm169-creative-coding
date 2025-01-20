@@ -24,9 +24,11 @@
 // limitations under the License.
 var font = "sans-serif";
 var letter = "A";
-let size = 10;
-let sizeDelta = 5;
+let size = 24;
+let sizeDelta = 50;
 let defaultSize = size;
+let letterArr = []
+const ALPHABET_SIZE = 26;
 let interSketch = (p) => {
   p.setup = () => {
     p.canvasContainer = $("#canvas-container3");
@@ -40,17 +42,26 @@ let interSketch = (p) => {
 
     p.textFont(font);
     p.textAlign(p.CENTER, p.CENTER);
-  };
-  p.keyTyped = () => {
-    if (letter == p.key) {
-      size += sizeDelta;
-    } else {
-      letter = p.key;
-      size = defaultSize;
+
+    for(let i = 0; i < ALPHABET_SIZE;i++)
+    {
+      p.append(letterArr,0);
     }
+  };
+  // Learned about unchar from p5 docs
+  p.keyTyped = () => {
+    letterArr[p.unchar(p.key)%26]+=sizeDelta;
+    letter = p.key;
+    size = letterArr[p.unchar(p.key)%26] + defaultSize;
+
+    let colorSaturation = p.unchar(p.key) % 255
     p.clear();
     p.textSize(size);
     p.text(letter, p.width / 2, p.height / 2);
+    p.fill(colorSaturation*p.random(),colorSaturation *p.random(), colorSaturation*p.random());
   };
 };
 new p5(interSketch);
+
+// Integrate: Color based on keycode and modulus
+// Innovate: Arrays to increment size of each letter based on amount of keystrokes
