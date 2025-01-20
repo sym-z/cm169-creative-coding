@@ -1,14 +1,13 @@
 // sketch.js - purpose and description here
-// Author: Your Name
-// Date:
-
-// Here is how you might set up an OOP p5.js project
-// Note that p5.js looks for a file called sketch.js
-
-// Constants - User-servicable parts
-// In a longer project I like to put these in a separate file
+// Author: Jack Sims
+// Date: Jan 19, 2025
 
 // Create sketch1, a callback to be handed to the p5 constructor.
+// This strategy I am using, encapsulating the sketches to be callbacks for the p5 function, was 
+  // recommended to me in a conversation with chatGPT on how to get all three sketches in one nice window.
+  // convo link: https://chatgpt.com/share/67883518-2834-800b-8b1a-d8fff46f1535
+  
+
 let HEIGHT;
 let WIDTH;
 const sketch1 = (pInst) => {

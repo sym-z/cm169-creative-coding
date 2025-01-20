@@ -1,5 +1,12 @@
+// sketch2.js - Shader animation
+// Author: Jack Sims
+// Date: Jan 19, 2025
+
+// For this project, I really wanted to incorporate a shader written in GLSL, so to get started,
+  // I asked GPT for advice.
+  // convo link: https://chatgpt.com/share/67895379-6a94-800b-825a-529d649e340e
+
 // GLSL Shader that emulates a CRT and Day/Night cycles.
-let customShader;
 // Where we are writing the sketch to, before applying the shader
 let texBuffer;
 // Global variables to track the canvas height.
