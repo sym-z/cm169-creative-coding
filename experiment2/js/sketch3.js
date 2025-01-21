@@ -1,9 +1,11 @@
-// sketch.js - purpose and description here
-// Author: Your Name
-// Date:
+// sketch3.js: A program that shows common letters in increasing size 
+// Author: Jack SIms
+// Date: Jan 20, 2025
 
 // Starting with the following code.
 // http://www.generative-gestaltung.de/2/sketches/?01_P/P_3_0_01
+
+
 // P_3_0_01
 //
 // Generative Gestaltung – Creative Coding im Web
@@ -27,6 +29,7 @@ var letter = "A";
 let size = 24;
 let sizeDelta = 50;
 let defaultSize = size;
+// Creat an array to hold the amount of times letters have been typed.
 let letterArr = []
 const ALPHABET_SIZE = 26;
 let interSketch = (p) => {

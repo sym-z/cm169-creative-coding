@@ -1,10 +1,12 @@
-// sketch2.js - Animation
+// sketch2.js - A program that lets you layer many captivating grayscale patterns.
 // Author: Jack Sims
 // Date: Jan 19, 2025
 
 // Starting with the following code:
 
 // http://www.generative-gestaltung.de/2/sketches/?02_M/M_1_3_02
+
+
 // M_1_3_02
 //
 // Generative Gestaltung – Creative Coding im Web
@@ -90,4 +92,4 @@ let animSketch = (p) => {
 new p5(animSketch);
 
 // Integrate: Shockwaves
-// Innovate: Labelling?
+// Innovate: Heartbeat, Gridwork pattern, layering, user input.

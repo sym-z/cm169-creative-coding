@@ -1,10 +1,12 @@
-// sketch.js - Vector Art
+// sketch.js - A showcase of shader code working in p5, and mouse based color calculations.
 // Author: Jack Sims
 // Date: Jan 19, 2025
 // P_2_0_01
 
 // Starting with this original code.
 // http://www.generative-gestaltung.de/2/sketches/?01_P/P_2_0_01
+
+
 // Generative Gestaltung – Creative Coding im Web
 // ISBN: 978-3-87439-902-9, First Edition, Hermann Schmidt, Mainz, 2018
 // Benedikt Groß, Hartmut Bohnacker, Julia Laub, Claudius Lazzeroni
@@ -21,6 +23,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+// This strategy I am using, encapsulating the sketches to be callbacks for the p5 function, was 
+  // recommended to me in a conversation with chatGPT on how to get all three sketches in one nice window.
+  // convo link: https://chatgpt.com/share/67883518-2834-800b-8b1a-d8fff46f1535
+// ChatGPT Conversations used:
+// Link to my conversation about getting started with shaders in p5, which I still used parts of in this code after switching my project to something new.
+// convo link: https://chatgpt.com/share/67895379-6a94-800b-825a-529d649e340e
+// Link to conversation about using a texture buffer: https://chatgpt.com/share/678f0209-6420-800b-8d0b-21f027197661
+// Link to debugging I was doing in the project before switching over: https://chatgpt.com/share/678d860b-37c0-800b-9c73-6992eef14c50
 let tex;
 let vecAnim = (p) => {
   p.setup = () => {
