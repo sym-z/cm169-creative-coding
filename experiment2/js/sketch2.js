@@ -31,16 +31,12 @@ const HEARTBEAT = 1;
 const GRIDWORK = 2;
 let curr_state = 0;
 
-function onBorder(x, y, p) {
-  if (x == 0 || y == 0 || x == p.width - 1 || y == p.height - 1) return 0;
-  return 1;
-}
-
 var actRandomSeed = 0;
 function drawNoise(p) {
   p.randomSeed(actRandomSeed);
   for (var x = 0; x < p.width; x++) {
     for (var y = 0; y < p.height; y++) {
+      // Three different interesting patterns, which are switched using keyboard input.
       switch (curr_state) {
         case SHOCKWAVES:
           p.set(x, y, p.dist(x, y, p.mouseX, p.mouseY) % 255);

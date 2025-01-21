@@ -45,7 +45,7 @@ let interSketch = (p) => {
 
     p.textFont(font);
     p.textAlign(p.CENTER, p.CENTER);
-
+    // Initialize letter array
     for(let i = 0; i < ALPHABET_SIZE;i++)
     {
       p.append(letterArr,0);
@@ -53,10 +53,12 @@ let interSketch = (p) => {
   };
   // Learned about unchar from p5 docs
   p.keyTyped = () => {
+    // Increase the referenced font size of the letter
     letterArr[p.unchar(p.key)%26]+=sizeDelta;
     letter = p.key;
+    // Set its size accordingly
     size = letterArr[p.unchar(p.key)%26] + defaultSize;
-
+    // Saturate the colors in a unique persisting way
     let colorSaturation = p.unchar(p.key) % 255
     p.clear();
     p.textSize(size);

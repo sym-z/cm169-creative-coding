@@ -56,6 +56,7 @@ let vecAnim = (p) => {
 
     // Fragment shader with alternating darkened stripes
     const fragShader = `
+    // Input variables to shader
     precision mediump float;
     uniform vec2 uResolution;
     uniform float uTime;
@@ -63,13 +64,15 @@ let vecAnim = (p) => {
 
     void main() {
       vec2 uv = gl_FragCoord.xy / uResolution;
+      // Warp the image
       uv.x += mod(uv.y,0.5) * sin(uTime);
       vec4 texColor = texture2D(uTexture, uv);
-      gl_FragColor = texColor; // Corrected syntax (use gl_FragColor)
+      // Set the pixel's color to be the texture at the same uv coord.
+      gl_FragColor = texColor; 
     }
     `;
 
-    // Create shader and check if it's valid
+    // Create shader
     customShader = p.createShader(vertShader, fragShader);
 
     p.strokeCap(p.SQUARE);
@@ -99,10 +102,11 @@ let vecAnim = (p) => {
       tex.line(0, 0, x, y);
     }
     p.shader(customShader);
-    // Set uniforms for the shader
+    // Set input values for the shader.
     customShader.setUniform("uResolution", [p.width, p.height]);
     customShader.setUniform("uTime", p.millis() / 1000.0);
     customShader.setUniform("uTexture", tex);
+    // Display the texture after shader application.
     p.image(tex, -p.width / 2, -p.height / 2, p.width, p.height); 
   };
 };
