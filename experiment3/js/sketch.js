@@ -1,79 +1,175 @@
-// sketch.js - purpose and description here
-// Author: Your Name
-// Date:
+// sketch.js - An interactive grammar and L-System visualizer.
+// Author: Jack Sims
+// Date: 1/27/2025
 
-// Here is how you might set up an OOP p5.js project
-// Note that p5.js looks for a file called sketch.js
+const ruleList = {
+  A: "A",
+  B: "CC",
+  C: "C",
+  D: "ASK",
+  E: "E",
+  F: "DEK",
+  G: "G",
+  H: "FGIK",
+  I: "I",
+  J: "HK",
+  K: "K",
+  L: "YNV",
+  M: "M",
+  N: "CE",
+  O: "O",
+  P: "QWFDB",
+  Q: "Q",
+  R: "ADFCHB",
+  S: "S",
+  T: "YWVO",
+  U: "U",
+  V: "QUNM",
+  W: "W",
+  X: "SGC",
+  Y: "Y",
+  Z: "ACKSIMS",
+};
 
-// Constants - User-servicable parts
-// In a longer project I like to put these in a separate file
-const VALUE1 = 1;
-const VALUE2 = 2;
+let customGrammar = (p) => {
+  p.setup = () => {
+    // place our canvas, making it fit our container
+    p.canvasContainer = $("#canvas-container");
+    let canvas = p.createCanvas(
+      p.canvasContainer.width(),
+      p.canvasContainer.height()
+    );
+    canvas.parent("canvas-container");
+    p.angleMode(p.DEGREES)
+    p.textFont("consolas")
+  };
 
-// Globals
-let myInstance;
-let canvasContainer;
-var centerHorz, centerVert;
-
-class MyClass {
-    constructor(param1, param2) {
-        this.property1 = param1;
-        this.property2 = param2;
+  p.draw = () => {};
+  // The amount of keys pressed since the start of the program.
+  let totalTyped = 0;
+  let textOffset = 0;
+  p.keyTyped = () => {
+    totalTyped += 1;
+    p.textSize(16);
+    p.text(`${p.key}`, 16 + 16 * textOffset,16)
+    textOffset += 1;
+    drawLSystem(p.key.toUpperCase(), ruleList[p.key.toUpperCase()]);
+  };
+  // Takes in a rule and draws it to the screen.
+  function drawKey(key) {
+    p.translate(p.canvasContainer.width()/2, p.canvasContainer.height()/2);
+    p.rotate(45*totalTyped);
+    let colorMod = p.random(0.5,1);
+    let sizeMod = 1/totalTyped + p.random()+1;
+    let posMod = 1/totalTyped + 1.5;
+    if (key === "A") {
+      console.log("Drawing A...");
+      p.fill(255*colorMod, 0, 0);
+      p.circle(0, 0, 20*sizeMod);
     }
+    else if (key === "C")
+    {
+      console.log("Drawing C...");
+      p.fill(0,255*colorMod,0)
+      p.circle(10*posMod,10*posMod,20*sizeMod)
 
-    myMethod() {
-        // code to run when method is called
     }
-}
+    else if (key === "E")
+    {
+      console.log("Drawing E...");
+      p.fill(0,0,255*colorMod)
+      p.circle(15*posMod,30*posMod,20*sizeMod)
 
-function resizeScreen() {
-  centerHorz = canvasContainer.width() / 2; // Adjusted for drawing logic
-  centerVert = canvasContainer.height() / 2; // Adjusted for drawing logic
-  console.log("Resizing...");
-  resizeCanvas(canvasContainer.width(), canvasContainer.height());
-  // redrawCanvas(); // Redraw everything based on new size
-}
+    }
+    else if (key === "G")
+    {
+      console.log("Drawing G...");
+      p.fill(0,128*colorMod,128*colorMod)
+      p.circle(45*posMod,60*posMod,20*sizeMod)
 
-// setup() function is called once when the program starts
-function setup() {
-  // place our canvas, making it fit our container
-  canvasContainer = $("#canvas-container");
-  let canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
-  canvas.parent("canvas-container");
-  // resize canvas is the page is resized
+    }
+    else if (key === "I")
+    {
+      console.log("Drawing I...");
+      p.fill(128*colorMod,128*colorMod,0)
+      p.circle(10*posMod,90*posMod,20*sizeMod)
 
-  // create an instance of the class
-  myInstance = new MyClass("VALUE1", "VALUE2");
+    }
+    else if (key === "K")
+    {
+      console.log("Drawing K...");
+      p.fill(128*colorMod,0,128*colorMod)
+      p.circle(30*posMod,120*posMod,20*sizeMod)
 
-  $(window).resize(function() {
-    resizeScreen();
-  });
-  resizeScreen();
-}
+    }
+    else if (key === "M")
+    {
+      console.log("Drawing M...");
+      p.fill(64*colorMod,255*colorMod,128*colorMod)
+      p.circle(60*posMod,60*posMod,20*sizeMod)
 
-// draw() function is called repeatedly, it's the main animation loop
-function draw() {
-  background(220);    
-  // call a method on the instance
-  myInstance.myMethod();
+    }
+    else if (key === "O")
+    {
+      console.log("Drawing O...");
+      p.fill(128*colorMod,64*colorMod,255*colorMod)
+      p.circle(45*posMod,120*posMod,20*sizeMod)
 
-  // Set up rotation for the rectangle
-  push(); // Save the current drawing context
-  translate(centerHorz, centerVert); // Move the origin to the rectangle's center
-  rotate(frameCount / 100.0); // Rotate by frameCount to animate the rotation
-  fill(234, 31, 81);
-  noStroke();
-  rect(-125, -125, 250, 250); // Draw the rectangle centered on the new origin
-  pop(); // Restore the original drawing context
+    }
+    else if (key === "Q")
+    {
+      console.log("Drawing Q...");
+      p.fill(255*colorMod,128*colorMod,64*colorMod)
+      p.circle(120*posMod,45*posMod,20*sizeMod)
 
-  // The text is not affected by the translate and rotate
-  fill(255);
-  textStyle(BOLD);
-  textSize(140);
-  text("p5*", centerHorz - 105, centerVert + 40);
-}
+    }
+    else if (key === "S")
+    {
+      console.log("Drawing S...");
+      p.fill(255*colorMod,255*colorMod,0)
+      p.circle(30*posMod,30*posMod,20*sizeMod)
 
-// mousePressed() function is called once after every time a mouse button is pressed
-function mousePressed() {
-    // code to run when mouse is pressed
-}
+    }
+    else if (key === "U")
+    {
+      console.log("Drawing U...");
+      p.fill(0,255*colorMod,255*colorMod)
+      p.circle(60*posMod,90*posMod,20*sizeMod)
+
+    }
+    else if (key === "W")
+    {
+      console.log("Drawing W...");
+      p.fill(255*colorMod,0,255*colorMod)
+      p.circle(120*posMod,120*posMod,20*sizeMod)
+
+    }
+    else if (key === "Y")
+    {
+      console.log("Drawing Y...");
+      p.fill(0,0,0)
+      p.circle(45*posMod,45*posMod,20*sizeMod)
+
+    }
+    p.pop();
+  }
+  // ruleKey is the key of the rule we are drawing from the ruleList, and sentence is the associated
+  // value.
+  function drawLSystem(ruleKey, sentence) {
+    console.log(sentence+" IS THE SENTENCE");
+    for (let i = 0; i < sentence.length; i++) {
+      let currentLetter = sentence.charAt(i);
+      // Recurse if this letter is also a rule.
+      if (currentLetter in ruleList && currentLetter != ruleKey) {
+        console.log(`Recursing into new ruleKey: ${currentLetter}`);
+        // Being that it recurses, I increment letters typed so that the rotation works based on the letters in each sentence.
+        totalTyped += 1;
+        drawLSystem(currentLetter, ruleList[currentLetter]);
+      } else {
+        p.push();
+        drawKey(currentLetter);
+      }
+    }
+  }
+};
+new p5(customGrammar);
