@@ -2,33 +2,34 @@
 // Author: Jack Sims
 // Date: 1/27/2025
 
+// List of rules used by the L-System to draw the circles to the screen.
 const ruleList = {
   A: "A",
-  B: "CC",
+  B: "CCACEGIF",
   C: "C",
-  D: "ASK",
+  D: "ASKKSA",
   E: "E",
-  F: "DEK",
+  F: "DEKKED",
   G: "G",
-  H: "FGIK",
+  H: "FGIKAAGIMOP",
   I: "I",
-  J: "HK",
+  J: "HKSUWYDQV",
   K: "K",
-  L: "YNV",
+  L: "YNVXQAE",
   M: "M",
-  N: "CE",
+  N: "MMOMMO",
   O: "O",
-  P: "QWFDB",
+  P: "QWFDBV",
   Q: "Q",
   R: "ADFCHB",
   S: "S",
-  T: "YWVO",
+  T: "YWVORPZ",
   U: "U",
-  V: "QUNM",
+  V: "QUNMQUNM",
   W: "W",
-  X: "SGC",
+  X: "SGCFFDA",
   Y: "Y",
-  Z: "ACKSIMS",
+  Z: "JACKSIMS",
 };
 
 let customGrammar = (p) => {
@@ -41,6 +42,8 @@ let customGrammar = (p) => {
     );
     canvas.parent("canvas-container");
     p.angleMode(p.DEGREES)
+    // Chat GPT let me know that consolas was an available font in this conversation
+      // Link: https://chatgpt.com/share/67984b26-1b98-800b-b64b-813365341a82
     p.textFont("consolas")
   };
 
@@ -57,8 +60,11 @@ let customGrammar = (p) => {
   };
   // Takes in a rule and draws it to the screen.
   function drawKey(key) {
+    // Canvas is centered and rotated when this function is called.
     p.translate(p.canvasContainer.width()/2, p.canvasContainer.height()/2);
+    // Canvas is rotated based on the number of calls to drawKey()
     p.rotate(45*totalTyped);
+    // Add variation to circles
     let colorMod = p.random(0.5,1);
     let sizeMod = 1/totalTyped + p.random()+1;
     let posMod = 1/totalTyped + 1.5;
