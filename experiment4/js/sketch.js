@@ -105,6 +105,10 @@ function printHUD(p) {
     wrapLength
   );
 }
+function printInstructions(p)
+{
+    p.text("Use the letter keys to play notes. Use number keys to adjust ADSR. 1/2: Lower/Raise Attack, 3/4: Lower/Raise Decay, 5/6: Lower/Raise Attack Sustain Ratio, 7/8: Lower/Raise Release, 9/0: Lower/Raise Duration",p.canvasContainer.width()-wrapLength,50,wrapLength)
+}
 let soundProject = (p) => {
   p.setup = () => {
     // place our canvas, making it fit our container
@@ -120,7 +124,9 @@ let soundProject = (p) => {
   };
 
   p.draw = () => {
+    p.clear();
     printHUD(p);
+    printInstructions(p)
   };
   p.keyTyped = () => {
     let keyNum = p.unchar(p.key);
