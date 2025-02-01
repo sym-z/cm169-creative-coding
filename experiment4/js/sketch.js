@@ -2,6 +2,12 @@
 // Author: Jack Sims
 // Date:
 
+// TODO: Noise on key press
+// DONE: Let user adjust ADSR
+// TODO: Visual Component
+// TODO: Print Controls
+
+
 let pianoRef = {
   Z: "A3",
   X: "B3",
@@ -30,10 +36,6 @@ let pianoRef = {
   O: "D6",
   P: "E6",
 };
-// TODO: Noise on SpaceBar
-// TODO: Let user adjust ADSR
-// TODO: Visual Component
-
 // Our Synthesizer
 let polySynth;
 
@@ -49,6 +51,7 @@ let currRel = 0;
 let currVel = 1;
 let currDur = 0.2;
 
+// Definitions for bounds checking user input.
 const ZERO_KEY = 48;
 const NINE_KEY = 57;
 
@@ -56,6 +59,52 @@ const LOWER_A = 97;
 const UPPER_A = 65;
 const LOWER_Z = 122;
 const UPPER_Z = 90;
+
+// Use the number keys to change the note's ADSR
+function ADSR(keyNum) {
+  if (keyNum === ZERO_KEY + 1) {
+    if (currAtt >= 0.05) currAtt -= 0.05;
+  } else if (keyNum === ZERO_KEY + 2) {
+    if (currAtt < 1) currAtt += 0.05;
+  } else if (keyNum === ZERO_KEY + 3) {
+    if (currDec >= 0.05) currDec -= 0.05;
+  } else if (keyNum === ZERO_KEY + 4) {
+    if (currDec < 1) currDec += 0.05;
+  } else if (keyNum === ZERO_KEY + 5) {
+    if (currASRatio >= 0.05) currASRatio -= 0.05;
+  } else if (keyNum === ZERO_KEY + 6) {
+    if (currASRatio < 1) currASRatio += 0.05;
+  } else if (keyNum === ZERO_KEY + 7) {
+    if (currRel >= 0.05) currRel -= 0.05;
+  } else if (keyNum === ZERO_KEY + 8) {
+    if (currRel < 1) currRel += 0.05;
+  } else if (keyNum === ZERO_KEY + 9) {
+    if (currDur >= 0.05) currDur -= 0.05;
+  } else if (keyNum === ZERO_KEY) {
+    if (currDur < 1) currDur += 0.05;
+  }
+}
+// Use the PolySynth to play the given note at the current ADSR
+function playNote(note) {
+  polySynth.setADSR(currAtt, currDec, currASRatio, currRel);
+  polySynth.play(pianoRef[note], currVel, 0, currDur);
+}
+// Set up text output.
+function textFormat(p) {
+  p.textSize(16);
+  p.textFont("Consolas");
+  p.textAlign(p.LEFT, p.TOP);
+  p.textWrap(p.WORD);
+}
+// Displays the HUD information about the current state of the PolySynth.
+function printHUD(p) {
+  p.text(
+    `Note: ${currNote}, Attack: ${currAtt}, Decay ${currDec}, Attack - Sustain Ratio: ${currASRatio}, Release: ${currRel}, Velocity: ${currVel}, Duration: ${currDur}`,
+    50,
+    50,
+    wrapLength
+  );
+}
 let soundProject = (p) => {
   p.setup = () => {
     // place our canvas, making it fit our container
@@ -67,56 +116,26 @@ let soundProject = (p) => {
     canvas.parent("canvas-container");
     polySynth = new p5.PolySynth();
 
-    // Set up text output.
-    p.textSize(16);
-    p.textFont("Consolas");
-    p.textAlign(p.LEFT, p.TOP);
-    p.textWrap(p.WORD);
+    textFormat(p);
   };
 
   p.draw = () => {
-    p.text(
-      `Note: ${currNote}, Attack: ${currAtt}, Decay ${currDec}, Attack - Sustain Ratio: ${currASRatio}, Release: ${currRel}, Velocity: ${currVel}, Duration: ${currDur}`,
-      50,
-      50,
-      wrapLength
-    );
+    printHUD(p);
   };
   p.keyTyped = () => {
-    console.log(p.unchar(p.key));
     let keyNum = p.unchar(p.key);
+    let note = p.key.toUpperCase();
     if (keyNum >= ZERO_KEY && keyNum <= NINE_KEY) {
       p.clear();
-      if (keyNum === ZERO_KEY + 1) {
-        if (currAtt >= 0.05) currAtt -= 0.05;
-      } else if (keyNum === ZERO_KEY + 2) {
-        if (currAtt < 1) currAtt += 0.05;
-      } else if (keyNum === ZERO_KEY + 3) {
-        if (currDec >= 0.05) currDec -= 0.05;
-      } else if (keyNum === ZERO_KEY + 4) {
-        if (currDec < 1) currDec += 0.05;
-      } else if (keyNum === ZERO_KEY + 5) {
-        if (currASRatio >= 0.05) currASRatio -= 0.05;
-      } else if (keyNum === ZERO_KEY + 6) {
-        if (currASRatio < 1) currASRatio += 0.05;
-      } else if (keyNum === ZERO_KEY + 7) {
-        if (currRel >= 0.05) currRel -= 0.05;
-      } else if (keyNum === ZERO_KEY + 8) {
-        if (currRel < 1) currRel += 0.05;
-      } else if (keyNum === ZERO_KEY + 9) {
-        if (currDur >= 0.05) currDur -= 0.05;
-      } else if (keyNum === ZERO_KEY) {
-        if (currDur < 1) currDur += 0.05;
-      }
+      ADSR(keyNum);
     } else if (
       (keyNum >= UPPER_A && keyNum <= UPPER_Z) ||
       (keyNum >= LOWER_A && keyNum <= LOWER_Z)
     ) {
       p.userStartAudio();
-      polySynth.setADSR(currAtt, currDec, currASRatio, currRel);
-      polySynth.play(pianoRef[p.key.toUpperCase()], currVel, 0, currDur);
+      playNote(note);
       p.clear();
-      currNote = pianoRef[p.key.toUpperCase()];
+      currNote = pianoRef[note];
     }
   };
 };
