@@ -36,6 +36,34 @@ let pianoRef = {
   O: "D6",
   P: "E6",
 };
+let notePositions = {
+  A3:0,
+  B3:1,
+  C3:2,
+  D3:3,
+  E3:4,
+  F3:5,
+  G3:6, 
+  A4:7,
+  B4:8,
+  C4:9,
+  D4:10,
+  E4:11,
+  F4:12,
+  G4:13, 
+  A5:14,
+  B5:15,
+  C5:16,
+  D5:17,
+  E5:18,
+  F5:19,
+  G5:20, 
+  A6:21,
+  B6:22,
+  C6:23,
+  D6:24,
+  E6:25,
+}
 // Our Synthesizer
 let polySynth;
 
@@ -43,7 +71,7 @@ let polySynth;
 let wrapLength = 150;
 
 // For output to the user about the current note they're playing.
-let currNote = "N/A";
+let currNote = "A4";
 let currAtt = 0.01;
 let currDec = 0.1;
 let currASRatio = 1;
@@ -89,6 +117,13 @@ function playNote(note) {
   polySynth.setADSR(currAtt, currDec, currASRatio, currRel);
   polySynth.play(pianoRef[note], currVel, 0, currDur);
 }
+function drawNote(p,note){
+  let height = p.canvasContainer.height();
+  let centerW = p.canvasContainer.width()/2;
+  let noteRadius = 25;
+  p.fill(255,0,0);
+  p.circle(centerW,height-noteRadius*notePositions[note],noteRadius);
+}
 // Set up text output.
 function textFormat(p) {
   p.textSize(16);
@@ -125,8 +160,10 @@ let soundProject = (p) => {
 
   p.draw = () => {
     p.clear();
+    p.fill(0,0,0);
     printHUD(p);
     printInstructions(p)
+    drawNote(p,currNote);
   };
   p.keyTyped = () => {
     let keyNum = p.unchar(p.key);
