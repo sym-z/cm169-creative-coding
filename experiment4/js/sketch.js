@@ -68,7 +68,7 @@ let notePositions = {
 let polySynth;
 
 // For text wrapping.
-let wrapLength = 150;
+let wrapLength = 300;
 
 // For output to the user about the current note they're playing.
 let currNote = "A4";
@@ -88,6 +88,8 @@ const UPPER_A = 65;
 const LOWER_Z = 122;
 const UPPER_Z = 90;
 
+// Used for ADSR output.
+const PRECISION = 3;
 // Use the number keys to change the note's ADSR
 function ADSR(keyNum) {
   if (keyNum === ZERO_KEY + 1) {
@@ -121,8 +123,12 @@ function drawNote(p,note){
   let height = p.canvasContainer.height();
   let centerW = p.canvasContainer.width()/2;
   let noteRadius = 25;
-  p.fill(255,0,0);
-  p.circle(centerW,height-noteRadius*notePositions[note],noteRadius);
+  let redColor = 255 * currAtt;
+  let greenColor = 255 * currDec;
+  let blueColor = 255 * currRel;
+  p.background(blueColor,redColor,greenColor)
+  p.fill(redColor,greenColor,blueColor);
+  p.circle(centerW,height-noteRadius*notePositions[note],notePositions[note]*noteRadius);
 }
 // Set up text output.
 function textFormat(p) {
@@ -131,10 +137,11 @@ function textFormat(p) {
   p.textAlign(p.LEFT, p.TOP);
   p.textWrap(p.WORD);
 }
+
 // Displays the HUD information about the current state of the PolySynth.
 function printHUD(p) {
   p.text(
-    `Note: ${currNote}, Attack: ${currAtt}, Decay ${currDec}, Attack - Sustain Ratio: ${currASRatio}, Release: ${currRel}, Velocity: ${currVel}, Duration: ${currDur}`,
+    `Note: ${currNote}, \n(1-/2+) Attack: ${currAtt.toPrecision(PRECISION)}, \n(3-/4+) Decay ${currDec.toPrecision(PRECISION)}, \n(5-/6+) Attack - Sustain Ratio: ${currASRatio.toPrecision(PRECISION)}, \n(7-/8+) Release: ${currRel.toPrecision(PRECISION)}, \nVelocity: ${currVel.toPrecision(PRECISION)}, \n(9-/0+) Duration: ${currDur.toPrecision(PRECISION)}`,
     50,
     50,
     wrapLength
@@ -142,7 +149,7 @@ function printHUD(p) {
 }
 function printInstructions(p)
 {
-    p.text("Use the letter keys to play notes. Use number keys to adjust ADSR. 1/2: Lower/Raise Attack, 3/4: Lower/Raise Decay, 5/6: Lower/Raise Attack Sustain Ratio, 7/8: Lower/Raise Release, 9/0: Lower/Raise Duration",p.canvasContainer.width()-wrapLength,50,wrapLength)
+    p.text("Use the letter keys to play notes. \nUse number keys to adjust ADSR. \n1/2: Lower/Raise Attack, \n3/4: Lower/Raise Decay, \n5/6: Lower/Raise Attack Sustain Ratio, \n7/8: Lower/Raise Release, \n9/0: Lower/Raise Duration",p.canvasContainer.width()-wrapLength,50,wrapLength)
 }
 let soundProject = (p) => {
   p.setup = () => {
@@ -160,10 +167,10 @@ let soundProject = (p) => {
 
   p.draw = () => {
     p.clear();
-    p.fill(0,0,0);
+    drawNote(p,currNote);
+    p.fill(255,255,255);
     printHUD(p);
     printInstructions(p)
-    drawNote(p,currNote);
   };
   p.keyTyped = () => {
     let keyNum = p.unchar(p.key);
