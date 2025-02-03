@@ -1,13 +1,16 @@
-// sketch.js -
+// sketch.js - Paint by Synthesizer
 // Author: Jack Sims
-// Date:
+// Date: February 2, 2025
 
-// TODO: Noise on key press
-// DONE: Let user adjust ADSR
-// TODO: Visual Component
-// TODO: Print Controls
+// Chat GPT Conversation Accreditation:
+// - MIDI Notation
+// 	- https://chatgpt.com/share/679c0944-57f8-800b-9903-b1224a994603
+// - Word Wrapping
+// 	- https://chatgpt.com/share/679d1489-9b08-800b-8008-146bf985971e
+// - Precision
+// 	- https://chatgpt.com/c/679fdc0b-9e20-800b-82e5-721a05d28dbe
 
-
+// Dictionary of keyboard key to music note conversion.
 let pianoRef = {
   Z: "A3",
   X: "B3",
@@ -36,6 +39,7 @@ let pianoRef = {
   O: "D6",
   P: "E6",
 };
+// Dictionary of music note to screen position conversion
 let notePositions = {
   A3:0,
   B3:1,
@@ -119,6 +123,7 @@ function playNote(note) {
   polySynth.setADSR(currAtt, currDec, currASRatio, currRel);
   polySynth.play(pianoRef[note], currVel, 0, currDur);
 }
+// Draws the visualization of the current note played.
 function drawNote(p,note){
   let height = p.canvasContainer.height();
   let centerW = p.canvasContainer.width()/2;
@@ -175,6 +180,7 @@ let soundProject = (p) => {
   p.keyTyped = () => {
     let keyNum = p.unchar(p.key);
     let note = p.key.toUpperCase();
+    // If a number is pressed, adjust ADSR, if a letter is pressed, play a note
     if (keyNum >= ZERO_KEY && keyNum <= NINE_KEY) {
       p.clear();
       ADSR(keyNum);
