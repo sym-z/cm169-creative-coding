@@ -1,6 +1,6 @@
 // sketch.js - Warmth of 90's Video Game Graphics
 // Author: Jack Sims
-// Date:
+// Date: February 10, 2025
 
 let angleY = 0;
 let angleX = 3.14;
@@ -9,7 +9,7 @@ let speed = 0.2;
 let test;
 let graphicsProject = (p) => {
   p.preload = () => {
-    test = p.loadModel("/test-model3.obj");
+    test = p.loadModel("/experiment5/assets/test-model3.obj");
   };
   p.setup = () => {
     // place our canvas, making it fit our container
