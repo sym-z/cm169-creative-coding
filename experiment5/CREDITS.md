@@ -4,9 +4,6 @@ Inspired from the games I played during my childhood and my love for retro techn
 
 NOTE: Small Typo is in the video where I refer to the art software I used to make the textures as Aesprite instead of Aseprite.
 
-SINCE THE LINKS ARE CUT OFF IN THE DESCRIPTION, PLEASE FOLLOW THIS PASTEBIN LINK TO MY ACCREDITATIONS:
-https://pastebin.com/G1v5W9tJ
-
 Tutorials Used and Other Accreditation:
 
 Vertex Painting Tutorial used for Debugging
