@@ -13,7 +13,7 @@ let speed = 0.2;
 let test;
 let graphicsProject = (p) => {
   p.preload = () => {
-    test = p.loadModel("/experiment5/assets/test-model3.obj");
+    test = p.loadModel("/test-model3.obj");
   };
   p.setup = () => {
     // place our canvas, making it fit our container
