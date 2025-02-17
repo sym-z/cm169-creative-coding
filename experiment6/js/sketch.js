@@ -1,7 +1,8 @@
-// sketch.js - AntiMetaMessenger
+// sketch.js - Passing Notes in Class
 // Author: Jack Sims
 // Date:
 
+// TODO: Have text appear as L-System is Drawn? Where each circle is.
 // GPT Conversation used as a tutor and helper.
 // Convo Link: https://chatgpt.com/share/67b282eb-6264-800b-85e8-f6f0353fab0c
 // Text input from the user.
@@ -177,9 +178,8 @@ let textProject = (p) => {
   //   }
   // };
   function inputHandle(inText) {
-    let currTime = new Date();
     // Out of bounds shifting caused weird errors.
-    shiftValue = currTime.getMilliseconds() % 26;
+    shiftValue = p.floor(p.random(0,25));
     for (let i = 0; i < inText.length; i++) {
       let asciiValue = p.unchar(inText[i]);
       // Character is a number
