@@ -3,6 +3,8 @@
 // Date:
 
 // TODO: Have text appear as L-System is Drawn? Where each circle is.
+// TODO: Show Decoded Message
+
 // GPT Conversation used as a tutor and helper.
 // Convo Link: https://chatgpt.com/share/67b282eb-6264-800b-85e8-f6f0353fab0c
 // Text input from the user.
@@ -111,7 +113,7 @@ let textProject = (p) => {
       totalTyped = rawTextInput.value().length;
       let originalString = rawTextInput.value();
       inputHandle(rawTextInput.value());
-      console.log(`DRAWING THE L-SYSTEM FOR ${originalString}`)
+      console.log(`DRAWING THE L-SYSTEM FOR ${originalString}`);
       for (let i = 0; i < originalString.length; i++) {
         drawLSystem(
           originalString[i].toUpperCase(),
@@ -138,10 +140,12 @@ let textProject = (p) => {
     // Button to start decoding process
     wetButton = p.createButton("Decode Text with given Shift");
     wetButton.position(shiftInputX, shiftInputY + elementBuffer);
-    wetButton.mousePressed(() => 
-    {
+    wetButton.mousePressed(() => {
       // Decode given text with shift value, then display l-system of result.
-      decode(wetTextInput.value(),shiftInput.value()%26,true)
+      console.log(
+        `Decoding ${wetTextInput.value()} by ${shiftInput.value() % 26}`
+      );
+      decode(wetTextInput.value(), shiftInput.value() % 26, true);
     });
   }
   function repaint(newBg = true) {
@@ -179,19 +183,13 @@ let textProject = (p) => {
   // };
   function inputHandle(inText) {
     // Out of bounds shifting caused weird errors.
-    shiftValue = p.floor(p.random(0,25));
+    shiftValue = p.floor(p.random(0, 25));
     for (let i = 0; i < inText.length; i++) {
       let asciiValue = p.unchar(inText[i]);
-      // Character is a number
-      if (asciiValue <= NINE_KEY && asciiValue >= ZERO_KEY) {
-        encodedText += String.fromCharCode(
-          ZERO_KEY + ((asciiValue + shiftValue) % 10)
-        );
-      }
       // Character is an upper case letter
-      else if (asciiValue <= UPPER_Z && asciiValue >= UPPER_A) {
+      if (asciiValue <= UPPER_Z && asciiValue >= UPPER_A) {
         encodedText += String.fromCharCode(
-          UPPER_A + ((asciiValue + shiftValue) % 26)
+          ((asciiValue - UPPER_A + shiftValue) % 26) + UPPER_A
         );
       }
       // Character is an lower case letter
@@ -203,6 +201,7 @@ let textProject = (p) => {
       // Character is something else
       else {
         encodedText += String.fromCharCode(asciiValue);
+        //TODO: Error Handle
       }
     }
     console.log(`Encoded string is ${encodedText}`);
@@ -214,18 +213,13 @@ let textProject = (p) => {
     // Determine character type
     // Subtract shift
     // Modulo by proper amount
+    decodedText = "";
     for (let i = 0; i < crypt.length; i++) {
       let asciiValue = p.unchar(crypt[i]);
-      // Character is a number
-      if (asciiValue <= NINE_KEY && asciiValue >= ZERO_KEY) {
-        decodedText += String.fromCharCode(
-          ZERO_KEY + ((asciiValue - shift - ZERO_KEY + 10) % 10)
-        );
-      }
       // Character is an upper case letter
-      else if (asciiValue <= UPPER_Z && asciiValue >= UPPER_A) {
+      if (asciiValue <= UPPER_Z && asciiValue >= UPPER_A) {
         decodedText += String.fromCharCode(
-          UPPER_A + ((asciiValue - shift - UPPER_A + 26) % 26)
+          ((asciiValue - UPPER_A - shift + 26) % 26) + UPPER_A
         );
       }
       // Character is an lower case letter
@@ -237,12 +231,12 @@ let textProject = (p) => {
       // Character is something else
       else {
         decodedText += String.fromCharCode(asciiValue);
+        //TODO: Error Handle
       }
     }
-    if(drawResult)
-    {
+    if (drawResult) {
       totalTyped = decodedText.length;
-      console.log(`DRAWING THE L-SYSTEM FOR ${decodedText}`)
+      console.log(`DRAWING THE L-SYSTEM FOR ${decodedText}`);
       for (let i = 0; i < decodedText.length; i++) {
         drawLSystem(
           decodedText[i].toUpperCase(),
@@ -321,7 +315,8 @@ let textProject = (p) => {
   // ruleKey is the key of the rule we are drawing from the ruleList, and sentence is the associated
   // value.
   function drawLSystem(ruleKey, sentence) {
-    // console.log(sentence + " IS THE SENTENCE");
+    //console.log(sentence + " IS THE SENTENCE");
+    if (sentence === undefined) return
     for (let i = 0; i < sentence.length; i++) {
       let currentLetter = sentence.charAt(i);
       // Recurse if this letter is also a rule.
