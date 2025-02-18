@@ -18,7 +18,7 @@ let centerH;
 
 // For page formatting
 let wrapLength = 300;
-let fontSize = 32;
+let fontSize = 16;
 let rawX = 400;
 let rawY = 400;
 let wetX = 0;
@@ -32,6 +32,7 @@ let decodeOutputY = 200;
 let elementBuffer = 32;
 // For Encoding and decoding
 let shiftValue = 0;
+let lastOriginal = "";
 let encodedText = "";
 let decodedText = "";
 
@@ -99,22 +100,24 @@ let textProject = (p) => {
 
     makeInputBoxes();
     p.angleMode(p.DEGREES);
+    repaint();
   };
   function makeInputBoxes() {
     // Text to encode
     rawTextInput = p.createInput("");
     rawTextInput.attribute("placeholder", "Text to encode");
     rawTextInput.position(rawX, rawY);
-    rawTextInput.input(repaint);
+    //rawTextInput.input(repaint);
     // Button to start encoding process
     rawButton = p.createButton("Encode Text");
     rawButton.position(rawX, rawY + elementBuffer);
 
     rawButton.mousePressed(() => {
       // Do Encode and show original message's l system
+      repaint();
       totalTyped = rawTextInput.value().length;
       let originalString = rawTextInput.value();
-      inputHandle(rawTextInput.value());
+      encode(rawTextInput.value());
       console.log(`DRAWING THE L-SYSTEM FOR ${originalString}`);
       for (let i = 0; i < originalString.length; i++) {
         drawLSystem(
@@ -135,7 +138,7 @@ let textProject = (p) => {
 
     // Text to decode
     wetTextInput = p.createInput("");
-    wetTextInput.input(repaint);
+    //wetTextInput.input(repaint);
     wetTextInput.attribute("placeholder", "Text to decode");
     wetTextInput.position(wetX, wetY);
 
@@ -147,18 +150,23 @@ let textProject = (p) => {
       console.log(
         `Decoding ${wetTextInput.value()} by ${shiftInput.value() % 26}`
       );
+      repaint();
       decode(wetTextInput.value(), shiftInput.value() % 26, true);
     });
+    decodeOutputX = shiftInputX-128;
+    decodeOutputY = shiftInputY+ 2*elementBuffer;
+
   }
   function repaint(newBg = true) {
     if (newBg) p.background(200);
     let msg = rawTextInput.value();
     p.text(
-      `Shift: ${shiftValue}, ${msg}`,
+      `ENCODE INPUT, PRESS "ENCODE TEXT" TO RANDOMLY SHIFT!\nOriginal Message: ${lastOriginal} \nAmount to Shift: ${shiftValue}, \nEncrypted Message:${msg}`,
       encodeOutputX,
       encodeOutputY,
       wrapLength
     );
+    p.text(`DECODE OUTPUT, USE THE ABOVE FIELDS AND BUTTON TO DECODE A MESSAGE!\nEncrypted message: ${wetTextInput.value()} \nwhen shifted by ${shiftInput.value()}\nis: ${decodedText}`, decodeOutputX, decodeOutputY,wrapLength)
   }
   function formatSetup() {
     p.textSize(fontSize);
@@ -168,22 +176,11 @@ let textProject = (p) => {
   }
   p.draw = () => {};
   let totalTyped = 0;
-  // p.keyPressed = () => {
-  //   if (p.keyCode === p.ENTER) {
-  //     totalTyped = rawTextInput.value().length;
-  //     inputHandle(rawTextInput.value());
-  //     for (let i = 0; i < rawTextInput.value().length; i++) {
-  //       drawLSystem(
-  //         rawTextInput.value()[i].toUpperCase(),
-  //         ruleList[rawTextInput.value()[i].toUpperCase()]
-  //       );
-  //     }
-  //     repaint(false);
-  //     rawTextInput.value("");
-  //   }
-  // };
-  function inputHandle(inText) {
+
+  function encode(inText) {
     // Out of bounds shifting caused weird errors.
+    lastOriginal = inText;
+    encodedText = "";
     shiftValue = p.floor(p.random(0, 25));
     for (let i = 0; i < inText.length; i++) {
       let asciiValue = p.unchar(inText[i]);
@@ -207,7 +204,6 @@ let textProject = (p) => {
     }
     console.log(`Encoded string is ${encodedText}`);
     rawTextInput.value(encodedText);
-    decode(encodedText, shiftValue);
     repaint();
   }
   function decode(crypt, shift, drawResult = false) {
