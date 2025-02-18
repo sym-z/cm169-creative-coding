@@ -147,17 +147,20 @@ let textProject = (p) => {
     wetButton.position(shiftInputX, shiftInputY + elementBuffer);
     wetButton.mousePressed(() => {
       // Decode given text with shift value, then display l-system of result.
+      decodedText = "";
       console.log(
         `Decoding ${wetTextInput.value()} by ${shiftInput.value() % 26}`
       );
       repaint();
       decode(wetTextInput.value(), shiftInput.value() % 26, true);
+      repaint(false);
     });
     decodeOutputX = shiftInputX-128;
     decodeOutputY = shiftInputY+ 2*elementBuffer;
 
   }
   function repaint(newBg = true) {
+    console.log(`Repaint Call! DECODED TEXT IS ${decodedText}`)
     if (newBg) p.background(200);
     let msg = rawTextInput.value();
     p.text(
@@ -206,7 +209,7 @@ let textProject = (p) => {
     rawTextInput.value(encodedText);
     repaint();
   }
-  function decode(crypt, shift, drawResult = false) {
+  function decode(crypt, shift, drawResult = true) {
     // Determine character type
     // Subtract shift
     // Modulo by proper amount
