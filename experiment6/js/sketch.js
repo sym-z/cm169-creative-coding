@@ -1,9 +1,6 @@
 // sketch.js - Passing Notes in Class
 // Author: Jack Sims
-// Date:
-
-// TODO: Show Decoded Message
-// TODO: Shift Defaulting with repaint.
+// Date: February 17 2025
 
 // GPT Conversation used as a tutor and helper.
 // Convo Link: https://chatgpt.com/share/67b282eb-6264-800b-85e8-f6f0353fab0c
@@ -90,30 +87,31 @@ let textProject = (p) => {
     let h = p.canvasContainer.height();
     centerW = p.canvasContainer.width() / 2;
     centerH = p.canvasContainer.height() / 2;
+    
+    // Set up coords for main page elements
     rawX = 150;
     rawY = 150;
-
     wetX = w - 200;
     wetY = 150;
     shiftInputX = wetX;
     shiftInputY = wetY + elementBuffer;
 
-    makeInputBoxes();
+    makeUI();
     p.angleMode(p.DEGREES);
     repaint();
   };
-  function makeInputBoxes() {
+  function makeUI() {
     // Text to encode
     rawTextInput = p.createInput("");
     rawTextInput.attribute("placeholder", "Text to encode");
     rawTextInput.position(rawX, rawY);
-    //rawTextInput.input(repaint);
+
     // Button to start encoding process
     rawButton = p.createButton("Encode Text");
     rawButton.position(rawX, rawY + elementBuffer);
 
     rawButton.mousePressed(() => {
-      // Do Encode and show original message's l system
+      // Do Encode and show original message's L-System
       repaint();
       totalTyped = rawTextInput.value().length;
       let originalString = rawTextInput.value();
@@ -182,6 +180,7 @@ let textProject = (p) => {
 
   function encode(inText) {
     // Out of bounds shifting caused weird errors.
+    // For the HUD
     lastOriginal = inText;
     encodedText = "";
     shiftValue = p.floor(p.random(0, 25));
@@ -198,11 +197,6 @@ let textProject = (p) => {
         encodedText += String.fromCharCode(
           ((asciiValue - LOWER_A + shiftValue) % 26) + LOWER_A
         );
-      }
-      // Character is something else
-      else {
-        encodedText += String.fromCharCode(asciiValue);
-        //TODO: Error Handle
       }
     }
     console.log(`Encoded string is ${encodedText}`);
@@ -228,12 +222,8 @@ let textProject = (p) => {
           ((asciiValue - LOWER_A - shift + 26) % 26) + LOWER_A
         );
       }
-      // Character is something else
-      else {
-        decodedText += String.fromCharCode(asciiValue);
-        //TODO: Error Handle
-      }
     }
+    // Draw L-System
     if (drawResult) {
       totalTyped = decodedText.length;
       console.log(`DRAWING THE L-SYSTEM FOR ${decodedText}`);
@@ -347,7 +337,6 @@ let textProject = (p) => {
       let currentLetter = sentence.charAt(i);
       // Recurse if this letter is also a rule.
       if (currentLetter in ruleList && currentLetter != ruleKey) {
-        // console.log(`Recursing into new ruleKey: ${currentLetter}`);
         // Being that it recurses, I increment letters typed so that the rotation works based on the letters in each sentence.
         totalTyped += 1;
         drawLSystem(currentLetter, ruleList[currentLetter]);
