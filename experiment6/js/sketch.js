@@ -2,8 +2,8 @@
 // Author: Jack Sims
 // Date:
 
-// TODO: Have text appear as L-System is Drawn? Where each circle is.
 // TODO: Show Decoded Message
+// TODO: Shift Defaulting with repaint.
 
 // GPT Conversation used as a tutor and helper.
 // Convo Link: https://chatgpt.com/share/67b282eb-6264-800b-85e8-f6f0353fab0c
@@ -25,8 +25,10 @@ let wetX = 0;
 let wetY = 0;
 let shiftInputX = 0;
 let shiftInputY = 0;
-let textOutputX = 200;
-let textOutputY = 200;
+let encodeOutputX = 200;
+let encodeOutputY = 200;
+let decodeOutputX = 200;
+let decodeOutputY = 200;
 let elementBuffer = 32;
 // For Encoding and decoding
 let shiftValue = 0;
@@ -124,8 +126,8 @@ let textProject = (p) => {
       rawTextInput.value("");
     });
 
-    textOutputX = 100;
-    textOutputY = 150;
+    encodeOutputX = 100;
+    encodeOutputY = 150;
     // How to shift text to decode
     shiftInput = p.createInput("");
     shiftInput.attribute("placeholder", "Shift Amount");
@@ -153,11 +155,10 @@ let textProject = (p) => {
     let msg = rawTextInput.value();
     p.text(
       `Shift: ${shiftValue}, ${msg}`,
-      textOutputX,
-      textOutputY,
+      encodeOutputX,
+      encodeOutputY,
       wrapLength
     );
-    console.log(textOutputX);
   }
   function formatSetup() {
     p.textSize(fontSize);
@@ -261,54 +262,80 @@ let textProject = (p) => {
       // console.log("Drawing A...");
       p.fill(255 * colorMod, 0, 0);
       p.circle(0, 0, 20 * sizeMod);
+      p.fill(255,255,255)
+      p.text("A",0,0)
     } else if (key === "C") {
       // console.log("Drawing C...");
       p.fill(0, 255 * colorMod, 0);
       p.circle(10 * posMod, 10 * posMod, 20 * sizeMod);
+      p.fill(255,255,255)
+      p.text("C",10 * posMod,10 * posMod)
     } else if (key === "E") {
       // console.log("Drawing E...");
       p.fill(0, 0, 255 * colorMod);
       p.circle(15 * posMod, 30 * posMod, 20 * sizeMod);
+      p.fill(255,255,255)
+      p.text("E",15 * posMod,30 * posMod)
     } else if (key === "G") {
       // console.log("Drawing G...");
       p.fill(0, 128 * colorMod, 128 * colorMod);
       p.circle(45 * posMod, 60 * posMod, 20 * sizeMod);
+      p.fill(255,255,255)
+      p.text("G",45 * posMod,60 * posMod)
     } else if (key === "I") {
       // console.log("Drawing I...");
       p.fill(128 * colorMod, 128 * colorMod, 0);
       p.circle(10 * posMod, 90 * posMod, 20 * sizeMod);
+      p.fill(255,255,255)
+      p.text("I",10 * posMod,90 * posMod)
     } else if (key === "K") {
       // console.log("Drawing K...");
       p.fill(128 * colorMod, 0, 128 * colorMod);
       p.circle(30 * posMod, 120 * posMod, 20 * sizeMod);
+      p.fill(255,255,255)
+      p.text("K",30 * posMod,120 * posMod)
     } else if (key === "M") {
       // console.log("Drawing M...");
       p.fill(64 * colorMod, 255 * colorMod, 128 * colorMod);
       p.circle(60 * posMod, 60 * posMod, 20 * sizeMod);
+      p.fill(255,255,255)
+      p.text("M",60 * posMod,60 * posMod)
     } else if (key === "O") {
       // console.log("Drawing O...");
       p.fill(128 * colorMod, 64 * colorMod, 255 * colorMod);
       p.circle(45 * posMod, 120 * posMod, 20 * sizeMod);
+      p.fill(255,255,255)
+      p.text("O",45 * posMod,120 * posMod)
     } else if (key === "Q") {
       // console.log("Drawing Q...");
       p.fill(255 * colorMod, 128 * colorMod, 64 * colorMod);
       p.circle(120 * posMod, 45 * posMod, 20 * sizeMod);
+      p.fill(255,255,255)
+      p.text("Q",120 * posMod,45 * posMod)
     } else if (key === "S") {
       // console.log("Drawing S...");
       p.fill(255 * colorMod, 255 * colorMod, 0);
       p.circle(30 * posMod, 30 * posMod, 20 * sizeMod);
+      p.fill(255,255,255)
+      p.text("S",30 * posMod,30 * posMod)
     } else if (key === "U") {
       // console.log("Drawing U...");
       p.fill(0, 255 * colorMod, 255 * colorMod);
       p.circle(60 * posMod, 90 * posMod, 20 * sizeMod);
+      p.fill(255,255,255)
+      p.text("U",60 * posMod,90 * posMod)
     } else if (key === "W") {
       // console.log("Drawing W...");
       p.fill(255 * colorMod, 0, 255 * colorMod);
       p.circle(120 * posMod, 120 * posMod, 20 * sizeMod);
+      p.fill(255,255,255)
+      p.text("W",120 * posMod,120 * posMod)
     } else if (key === "Y") {
       // console.log("Drawing Y...");
       p.fill(0, 0, 0);
       p.circle(45 * posMod, 45 * posMod, 20 * sizeMod);
+      p.fill(255,255,255)
+      p.text("Y",45 * posMod,45 * posMod)
     }
     p.pop();
   }
