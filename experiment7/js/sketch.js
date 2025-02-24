@@ -42,6 +42,7 @@ let dataProject = (p) => {
     p.append(funcArr, drawLine);
     p.append(funcArr, outputTasks);
     totalFuncs = funcArr.length;
+    p.background('#aaaaaa')
     funcArr[currChoice]();
   };
   p.keyTyped = () => {
@@ -61,6 +62,7 @@ let dataProject = (p) => {
     if (currChoice < 0) currChoice = totalFuncs - 1;
     if (currChoice >= totalFuncs) currChoice = 0;
     p.clear();
+    p.background('#aaaaaa')
     funcArr[currChoice]();
   };
   function textFormat() {
@@ -108,18 +110,18 @@ let dataProject = (p) => {
     Assignments: 0,
   };
   let subjectColor = {
-    Assets: "#00BB00",
+    Assets: "#00F800",
     Programming: "#0000FF",
     Design: "#FF0000",
     Tools: "#880088",
-    Accessibility: "#AAAA00",
+    Accessibility: "#DDDD00",
     Assignments: "#FF00FF",
   };
   function drawBar() {
     let scaleFactor = 8.5;
     p.noStroke();
     p.fill(0);
-    makeTitle("What Subjects have had the Most Assigned Tasks?");
+    makeTitle("Which Subjects have had the Most Assigned Tasks?");
     // Reset Dictionary
     Object.keys(subjectCount).forEach((key) => (subjectCount[key] = 0));
     // Calculate amount of tasks per category
@@ -152,9 +154,9 @@ let dataProject = (p) => {
   let lineScaleFactor = 25;
   let lineColor = "#FF0000";
   let dayColor = "#0000FF";
-  let taskColor = "#00AA00";
+  let taskColor = "#00EE00";
   function drawLine() {
-    makeTitle("How Many Tasks Have Been Due Per Day?");
+    makeTitle("How Many Tasks Have Been Due Per Day?\nDay #(Blue), # of Tasks(Green)");
     let minDate = Infinity;
     let maxDate = -Infinity;
     taskArr.forEach((task, index) => {
@@ -232,13 +234,13 @@ let dataProject = (p) => {
     console.log(taskDict);
     // Create dropdown of each key from taskDict
     teamSelect = p.createSelect();
-    teamSelect.position(cWidth / 2 - teamSelect.elt.getBoundingClientRect().width, cHeight / 2 - 50);
+    teamSelect.position(cWidth / 2 - teamSelect.elt.getBoundingClientRect().width+25, cHeight / 2 +25);
     Object.keys(taskDict).forEach((key) => {
       teamSelect.option(key);
     });
     // Create download button
     downloadButton = p.createButton("Download CSV of Team Member's Tasks!");
-    downloadButton.position(cWidth / 2- downloadButton.elt.getBoundingClientRect().width, cHeight / 2);
+    downloadButton.position(cWidth / 2- downloadButton.elt.getBoundingClientRect().width, cHeight / 2 + 75);
     downloadButton.mousePressed(downloadCSV);
   }
   function downloadCSV() {
