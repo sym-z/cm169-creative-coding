@@ -1,8 +1,9 @@
-// sketch.js -
+// sketch.js - A Glance into my Capstone Project
 // Author: Jack Sims
 // Date:
 let table;
 let taskArr = [];
+// For Menu Choices
 let funcArr = [];
 let totalFuncs = 0;
 let currChoice = 0;
@@ -34,15 +35,9 @@ let dataProject = (p) => {
     for (let i = 0; i < table.getRowCount(); i++) {
       p.append(taskArr, table.getRow(i).obj);
     }
-
-    // TODO: Use left and right button to cycle through options.
     taskArr.forEach((task, index) => {
-      console.log(task);
+      // console.log(task);
     });
-    //drawTaskScatter();
-    //drawBar();
-    //drawLine();
-    //outputTasks();
     p.append(funcArr, drawBar);
     p.append(funcArr, drawLine);
     p.append(funcArr, outputTasks);
@@ -160,14 +155,10 @@ let dataProject = (p) => {
     taskArr.forEach((task, index) => {
       let days = Number(task["Days Left"]);
       if (days < minDate && days != EMPTY_DAY) {
-        //console.log(`${days} is less than ${minDate}`);
         minDate = days;
-        //console.log(`${days} is new minDate`);
       }
       if (days > maxDate) {
-        //console.log(`${days} is greater than ${maxDate}`);
         maxDate = days;
-        //console.log(`${days} is new maxDate`);
       }
     });
     //console.log("min ", minDate, " max ", maxDate);
@@ -209,6 +200,9 @@ let dataProject = (p) => {
   }
   // Outputs tasks per member, write to new CSV!
   function outputTasks() {
+    p.noStroke();
+    p.fill(0)
+    makeTitle("Output the Tasks for a Team Member!")
     let taskDict = {
       Carter: [],
       Rozy: [],
