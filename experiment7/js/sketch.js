@@ -33,16 +33,28 @@ let dataProject = (p) => {
       p.append(taskArr, table.getRow(i).obj);
     }
 
-    // TODO: Use left and right button to cycle through options. 
+    // TODO: Use left and right button to cycle through options.
     taskArr.forEach((task, index) => {
-      console.log(task);
+      //console.log(task);
     });
     //drawTaskScatter();
-    drawBar();
+    //drawBar();
+    drawLine();
   };
   function textFormat() {
     p.textFont("consolas");
     p.textSize(fontSize);
+  }
+  function makeTitle(title){
+    p.textAlign(p.CENTER, p.TOP);
+    p.textSize(titleSize);
+    p.text(
+      title,
+      cWidth / 2,
+      edgeBuffer
+    );
+    p.textSize(fontSize);
+    p.textAlign(p.LEFT, p.BOTTOM);
   }
   let circleSize = 50;
   // TODO: Include name and better formatting.
@@ -77,51 +89,104 @@ let dataProject = (p) => {
     Assignments: 0,
   };
   let subjectColor = {
-    Assets: '#00BB00',
-    Programming: '#0000FF',
-    Design: '#FF0000',
-    Tools: '#880088',
-    Accessibility:'#AAAA00',
-    Assignments:'#FF00FF'
-  }
+    Assets: "#00BB00",
+    Programming: "#0000FF",
+    Design: "#FF0000",
+    Tools: "#880088",
+    Accessibility: "#AAAA00",
+    Assignments: "#FF00FF",
+  };
   let scaleFactor = 8.5;
   function drawBar() {
-    p.textAlign(p.CENTER,p.TOP)
-    p.textSize(titleSize)
-    p.text("What Subjects have had the Most Assigned Tasks?", cWidth/2,edgeBuffer)
-    p.textSize(fontSize)
-    p.textAlign(p.LEFT,p.BOTTOM)
+    p.textAlign(p.CENTER, p.TOP);
+    p.textSize(titleSize);
+    p.text(
+      "What Subjects have had the Most Assigned Tasks?",
+      cWidth / 2,
+      edgeBuffer
+    );
+    p.textSize(fontSize);
+    p.textAlign(p.LEFT, p.BOTTOM);
     // Calculate amount of tasks per category
-    taskArr.forEach((task,index) => {
-      if(task["Subject"] != "") subjectCount[task["Subject"]] += 1; 
-    }) 
-    console.log("Subject Count:",subjectCount)
+    taskArr.forEach((task, index) => {
+      if (task["Subject"] != "") subjectCount[task["Subject"]] += 1;
+    });
+    console.log("Subject Count:", subjectCount);
     let numSubjects = Object.keys(subjectCount).length;
-    let barWidth = p.floor(cWidth / numSubjects)
-    for(let i = 0; i < numSubjects; i++)
-    {
-      let currSubject = Object.keys(subjectCount)[i]
-      p.fill(subjectColor[currSubject])
+    let barWidth = p.floor(cWidth / numSubjects);
+    for (let i = 0; i < numSubjects; i++) {
+      let currSubject = Object.keys(subjectCount)[i];
+      p.fill(subjectColor[currSubject]);
       let xPos = i * barWidth;
-      let barHeight = subjectCount[currSubject] * scaleFactor
-      p.rect(xPos,cHeight-barHeight, barWidth-5, barHeight)
-      p.text(`${currSubject}: ${subjectCount[currSubject]}`,xPos,cHeight-barHeight-5)
+      let barHeight = subjectCount[currSubject] * scaleFactor;
+      p.rect(xPos, cHeight - barHeight, barWidth - 5, barHeight);
+      p.text(
+        `${currSubject}: ${subjectCount[currSubject]}`,
+        xPos,
+        cHeight - barHeight - 5
+      );
     }
   }
-  // Shows tasks per sprint
+  // Shows tasks per due per day
   // Use days left + the minimum value, -36!
   // Y-Plot, amount of tasks due on that day
   // X-Plot, days -36(0) to whatever the max is.
   // Due to my Google Sheets formula, a task with no assigned date assigns "Days Left:" to -45711
-  const EMPTY_DAY = -45711
+  const EMPTY_DAY = -45711;
+  let tasksPerDay = {}
+  let lineScaleFactor = 25;
+  let lineColor = '#FF0000'
+  let dayColor = '#0000FF'
+  let taskColor = '#00AA00'
   function drawLine() {
+    makeTitle("How Many Tasks Have Been Due Per Day?")
     let minDate = Infinity;
-    let maxDate = -Infinity
-    taskArr.forEach((task,index)=>{
-      if(task["Days Left:"] < minDate) minDate = task["Days Left:"] 
-      if(task["Days Left:"] > maxDate) maxDate = task["Days Left:"] 
-      
+    let maxDate = -Infinity;
+    taskArr.forEach((task, index) => {
+      let days = Number(task["Days Left"]);
+      if (days < minDate && days != EMPTY_DAY) {
+        //console.log(`${days} is less than ${minDate}`);
+        minDate = days;
+        //console.log(`${days} is new minDate`);
+      }
+      if (days > maxDate) {
+        //console.log(`${days} is greater than ${maxDate}`);
+        maxDate = days;
+        //console.log(`${days} is new maxDate`);
+      }
+    });
+    //console.log("min ", minDate, " max ", maxDate);
+    // Fill dictionary with an initial count of 0 for all days
+    for(let i = 0; i <= p.abs(minDate) + maxDate; i++)
+    {
+      tasksPerDay[i] = 0;
+    }
+    taskArr.forEach((task,index) => {
+      let days = Number(task["Days Left"]);
+      if(days != EMPTY_DAY){
+      // Normalize the day so that minDate is technically 0
+      days += p.abs(minDate);
+      tasksPerDay[days] += 1;
+    }
     })
+    //console.log(tasksPerDay)
+    
+    // Draw line graph
+    p.noFill();
+    p.stroke(lineColor);
+    p.beginShape();
+    for(let i=0; i<Object.keys(tasksPerDay).length; i++)
+    {
+      let xVal = p.map(i,0,Object.keys(tasksPerDay).length-1,edgeBuffer,cWidth-edgeBuffer);
+      let yVal = cHeight - tasksPerDay[i] * lineScaleFactor;
+      p.vertex(xVal,yVal);
+      p.stroke(dayColor)
+      p.text(`${i}`, xVal, cHeight+16)
+      p.stroke(taskColor)
+      p.text(`${tasksPerDay[i]}`, xVal, yVal-5)
+      p.stroke(lineColor)
+    }
+    p.endShape();
   }
   // Outputs tasks per member, write to new CSV!
   function outputTasks(task, index) {}
