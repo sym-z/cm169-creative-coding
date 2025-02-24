@@ -43,41 +43,35 @@ let dataProject = (p) => {
     //drawBar();
     //drawLine();
     //outputTasks();
-    p.append(funcArr,drawBar)
-    p.append(funcArr,drawLine)
-    p.append(funcArr,outputTasks)
-    totalFuncs = funcArr.length
-    funcArr[currChoice]()
+    p.append(funcArr, drawBar);
+    p.append(funcArr, drawLine);
+    p.append(funcArr, outputTasks);
+    totalFuncs = funcArr.length;
+    funcArr[currChoice]();
   };
-  p.keyTyped = () =>{
-    let input = p.key.toUpperCase()
+  p.keyTyped = () => {
+    let input = p.key.toUpperCase();
     // console.log(p.key.toUpperCase())
-    if(input === 'A')
-    {
+    if (input === "A") {
       currChoice--;
     }
-    if(input === 'D')
-    {
+    if (input === "D") {
       currChoice++;
     }
-    if(currChoice <0) currChoice = totalFuncs-1;
-    if(currChoice >= totalFuncs) currChoice = 0;
-    p.clear()
-    funcArr[currChoice]()
-  }
+    if (currChoice < 0) currChoice = totalFuncs - 1;
+    if (currChoice >= totalFuncs) currChoice = 0;
+    p.clear();
+    funcArr[currChoice]();
+  };
   function textFormat() {
     p.textFont("consolas");
     p.textSize(fontSize);
   }
-  function makeTitle(title){
-    p.fill(0)
+  function makeTitle(title) {
+    p.fill(0);
     p.textAlign(p.CENTER, p.TOP);
     p.textSize(titleSize);
-    p.text(
-      title,
-      cWidth / 2,
-      edgeBuffer
-    );
+    p.text(title, cWidth / 2, edgeBuffer);
     p.textSize(fontSize);
     p.textAlign(p.LEFT, p.BOTTOM);
   }
@@ -122,12 +116,12 @@ let dataProject = (p) => {
     Assignments: "#FF00FF",
   };
   function drawBar() {
-  let scaleFactor = 8.5;
-  p.noStroke()
-  p.fill(0)
-    makeTitle("What Subjects have had the Most Assigned Tasks?")
+    let scaleFactor = 8.5;
+    p.noStroke();
+    p.fill(0);
+    makeTitle("What Subjects have had the Most Assigned Tasks?");
     // Reset Dictionary
-    Object.keys(subjectCount).forEach((key) => (subjectCount[key] = 0))
+    Object.keys(subjectCount).forEach((key) => (subjectCount[key] = 0));
     // Calculate amount of tasks per category
     taskArr.forEach((task, index) => {
       if (task["Subject"] != "") subjectCount[task["Subject"]] += 1;
@@ -154,13 +148,13 @@ let dataProject = (p) => {
   // X-Plot, days -36(0) to whatever the max is.
   // Due to my Google Sheets formula, a task with no assigned date assigns "Days Left:" to -45711
   const EMPTY_DAY = -45711;
-  let tasksPerDay = {}
+  let tasksPerDay = {};
   let lineScaleFactor = 25;
-  let lineColor = '#FF0000'
-  let dayColor = '#0000FF'
-  let taskColor = '#00AA00'
+  let lineColor = "#FF0000";
+  let dayColor = "#0000FF";
+  let taskColor = "#00AA00";
   function drawLine() {
-    makeTitle("How Many Tasks Have Been Due Per Day?")
+    makeTitle("How Many Tasks Have Been Due Per Day?");
     let minDate = Infinity;
     let maxDate = -Infinity;
     taskArr.forEach((task, index) => {
@@ -178,59 +172,62 @@ let dataProject = (p) => {
     });
     //console.log("min ", minDate, " max ", maxDate);
     // Fill dictionary with an initial count of 0 for all days
-    for(let i = 0; i <= p.abs(minDate) + maxDate; i++)
-    {
+    for (let i = 0; i <= p.abs(minDate) + maxDate; i++) {
       tasksPerDay[i] = 0;
     }
-    taskArr.forEach((task,index) => {
+    taskArr.forEach((task, index) => {
       let days = Number(task["Days Left"]);
-      if(days != EMPTY_DAY){
-      // Normalize the day so that minDate is technically 0
-      days += p.abs(minDate);
-      tasksPerDay[days] += 1;
-    }
-    })
+      if (days != EMPTY_DAY) {
+        // Normalize the day so that minDate is technically 0
+        days += p.abs(minDate);
+        tasksPerDay[days] += 1;
+      }
+    });
     //console.log(tasksPerDay)
-    
+
     // Draw line graph
     p.noFill();
     p.stroke(lineColor);
     p.beginShape();
-    for(let i=0; i<Object.keys(tasksPerDay).length; i++)
-    {
-      let xVal = p.map(i,0,Object.keys(tasksPerDay).length-1,edgeBuffer,cWidth-edgeBuffer);
+    for (let i = 0; i < Object.keys(tasksPerDay).length; i++) {
+      let xVal = p.map(
+        i,
+        0,
+        Object.keys(tasksPerDay).length - 1,
+        edgeBuffer,
+        cWidth - edgeBuffer
+      );
       let yVal = cHeight - tasksPerDay[i] * lineScaleFactor;
-      p.vertex(xVal,yVal);
-      p.stroke(dayColor)
-      p.text(`${i}`, xVal, cHeight+16)
-      p.stroke(taskColor)
-      p.text(`${tasksPerDay[i]}`, xVal, yVal-5)
-      p.stroke(lineColor)
+      p.vertex(xVal, yVal);
+      p.stroke(dayColor);
+      p.text(`${i}`, xVal, cHeight + 16);
+      p.stroke(taskColor);
+      p.text(`${tasksPerDay[i]}`, xVal, yVal - 5);
+      p.stroke(lineColor);
     }
     p.endShape();
   }
   // Outputs tasks per member, write to new CSV!
-  let taskDict = {
-    'Carter':[],
-    'Rozy':[],
-    'James':[],
-    'Phoebe':[],
-    'Jackson':[],
-    'Jack':[],
-    'ALL':[],
-  }
   function outputTasks() {
+    let taskDict = {
+      Carter: [],
+      Rozy: [],
+      James: [],
+      Phoebe: [],
+      Jackson: [],
+      Jack: [],
+      ALL: [],
+    };
     taskArr.forEach((task, index) => {
-      let assignedStr = task["Team Member(s) Assigned"]
+      let assignedStr = task["Team Member(s) Assigned"];
       let assignedArr = assignedStr.split(",");
-      if(assignedStr != "")
-      {
+      if (assignedStr != "") {
         assignedArr.forEach((member) => {
-          p.append(taskDict[member.trim()], task)
-        })
+          p.append(taskDict[member.trim()], task);
+        });
       }
-    })
-    console.log(taskDict)
+    });
+    console.log(taskDict);
   }
   p.draw = () => {};
 };
