@@ -46,6 +46,11 @@ let dataProject = (p) => {
   };
   p.keyTyped = () => {
     let input = p.key.toUpperCase();
+    // TODO: Set as const
+    if (currChoice == 2) {
+      downloadButton.remove();
+      teamSelect.remove();
+    }
     // console.log(p.key.toUpperCase())
     if (input === "A") {
       currChoice--;
@@ -199,10 +204,12 @@ let dataProject = (p) => {
     p.endShape();
   }
   // Outputs tasks per member, write to new CSV!
+  let downloadButton;
+  let teamSelect;
   function outputTasks() {
     p.noStroke();
-    p.fill(0)
-    makeTitle("Output the Tasks for a Team Member!")
+    p.fill(0);
+    makeTitle("Output the Tasks for a Team Member!");
     let taskDict = {
       Carter: [],
       Rozy: [],
@@ -222,6 +229,24 @@ let dataProject = (p) => {
       }
     });
     console.log(taskDict);
+    // Create dropdown of each key from taskDict
+    teamSelect = p.createSelect();
+    teamSelect.position(cWidth / 2 - teamSelect.elt.getBoundingClientRect().width, cHeight / 2 - 50);
+    Object.keys(taskDict).forEach((key) => {
+      teamSelect.option(key);
+    });
+    // Create download button
+    downloadButton = p.createButton("Download CSV of Team Member's Tasks!");
+    downloadButton.position(cWidth / 2- downloadButton.elt.getBoundingClientRect().width, cHeight / 2);
+    downloadButton.mousePressed(downloadCSV);
+  }
+  function downloadCSV() {
+    // Create table
+    let table = new p5.Table();
+    // Build table using selection from dropdown.
+    // Add proper columns to table
+    // Add rows to column using taskDict
+    p.saveTable(table, `${teamSelect.value()}_tasks.csv`);
   }
   p.draw = () => {};
 };
