@@ -19,7 +19,7 @@ let wrapLength = 300;
 
 let dataProject = (p) => {
   p.preload = () => {
-    table = p.loadTable("/cm169-creative-coding/data.csv", "csv", "header");
+    table = p.loadTable("data.csv", "csv", "header");
   };
   p.setup = () => {
     p.canvasContainer = $("#canvas-container");
