@@ -36,7 +36,7 @@ let dataProject = (p) => {
       p.append(taskArr, table.getRow(i).obj);
     }
     taskArr.forEach((task, index) => {
-      // console.log(task);
+       console.log(task);
     });
     p.append(funcArr, drawBar);
     p.append(funcArr, drawLine);
@@ -203,6 +203,7 @@ let dataProject = (p) => {
     }
     p.endShape();
   }
+  let taskDict;
   // Outputs tasks per member, write to new CSV!
   let downloadButton;
   let teamSelect;
@@ -210,7 +211,7 @@ let dataProject = (p) => {
     p.noStroke();
     p.fill(0);
     makeTitle("Output the Tasks for a Team Member!");
-    let taskDict = {
+    taskDict = {
       Carter: [],
       Rozy: [],
       James: [],
@@ -244,8 +245,24 @@ let dataProject = (p) => {
     // Create table
     let table = new p5.Table();
     // Build table using selection from dropdown.
+    let memberTaskList = taskDict[teamSelect.value()];
     // Add proper columns to table
+    table.addColumn("Assigned Task");
+    table.addColumn("Status")
+    table.addColumn("Time Estimate")
+    table.addColumn("Priority")
+    table.addColumn("Sprint Number")
+    table.addColumn("Task Category")
     // Add rows to column using taskDict
+    memberTaskList.forEach((task) => {
+      let row = table.addRow();
+      row.setString("Assigned Task",task["Assignment"])
+      row.setString("Status",task["Status"])
+      row.setString("Time Estimate",task["Time Estimate (Days)"])
+      row.setString("Priority",task["Priority"])
+      row.setString("Sprint Number",task["Sprint Number"])
+      row.setString("Task Category",task["Subject"])
+    })
     p.saveTable(table, `${teamSelect.value()}_tasks.csv`);
   }
   p.draw = () => {};
