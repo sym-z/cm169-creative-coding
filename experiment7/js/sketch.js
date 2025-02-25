@@ -1,6 +1,6 @@
 // sketch.js - A Glance into my Capstone Project
 // Author: Jack Sims
-// Date:
+// Date: February 24, 2025
 let table;
 let taskArr = [];
 // For Menu Choices
@@ -35,9 +35,9 @@ let dataProject = (p) => {
     for (let i = 0; i < table.getRowCount(); i++) {
       p.append(taskArr, table.getRow(i).obj);
     }
-    taskArr.forEach((task, index) => {
-       console.log(task);
-    });
+    // taskArr.forEach((task, index) => {
+    //    console.log(task);
+    // });
     p.append(funcArr, drawBar);
     p.append(funcArr, drawLine);
     p.append(funcArr, outputTasks);
@@ -45,14 +45,13 @@ let dataProject = (p) => {
     p.background('#aaaaaa')
     funcArr[currChoice]();
   };
+  const CSV_FUNCTION = 2;
   p.keyTyped = () => {
     let input = p.key.toUpperCase();
-    // TODO: Set as const
-    if (currChoice == 2) {
+    if (currChoice == CSV_FUNCTION) {
       downloadButton.remove();
       teamSelect.remove();
     }
-    // console.log(p.key.toUpperCase())
     if (input === "A") {
       currChoice--;
     }
@@ -65,10 +64,6 @@ let dataProject = (p) => {
     p.background('#aaaaaa')
     funcArr[currChoice]();
   };
-  function textFormat() {
-    p.textFont("consolas");
-    p.textSize(fontSize);
-  }
   function makeTitle(title) {
     p.fill(0);
     p.textAlign(p.CENTER, p.TOP);
@@ -76,29 +71,6 @@ let dataProject = (p) => {
     p.text(title, cWidth / 2, edgeBuffer);
     p.textSize(fontSize);
     p.textAlign(p.LEFT, p.BOTTOM);
-  }
-  let circleSize = 50;
-  // TODO: Include name and better formatting.
-  function drawTaskScatter() {
-    taskArr.forEach((task, index) => {
-      let dataX = task["Time Estimate (Days)"];
-      let dataY = task["Sprint Number"];
-      let yPos = edgeBuffer;
-      let xPos = edgeBuffer;
-      if (dataX != "") {
-        xPos = dataX;
-      } else {
-        return;
-      }
-      if (dataY != "") {
-        yPos = dataY;
-      } else {
-        return;
-      }
-      xPos = p.floor(cWidth / xPos);
-      yPos = p.floor(cHeight / yPos);
-      p.ellipse(xPos, yPos, circleSize, circleSize);
-    });
   }
   // Shows tasks per category
   let subjectCount = {
@@ -125,10 +97,9 @@ let dataProject = (p) => {
     // Reset Dictionary
     Object.keys(subjectCount).forEach((key) => (subjectCount[key] = 0));
     // Calculate amount of tasks per category
-    taskArr.forEach((task, index) => {
+    taskArr.forEach((task) => {
       if (task["Subject"] != "") subjectCount[task["Subject"]] += 1;
     });
-    console.log("Subject Count:", subjectCount);
     let numSubjects = Object.keys(subjectCount).length;
     let barWidth = p.floor(cWidth / numSubjects);
     for (let i = 0; i < numSubjects; i++) {
@@ -159,7 +130,7 @@ let dataProject = (p) => {
     makeTitle("How Many Tasks Have Been Due Per Day?\nDay #(Blue), # of Tasks(Green)");
     let minDate = Infinity;
     let maxDate = -Infinity;
-    taskArr.forEach((task, index) => {
+    taskArr.forEach((task) => {
       let days = Number(task["Days Left"]);
       if (days < minDate && days != EMPTY_DAY) {
         minDate = days;
@@ -168,12 +139,11 @@ let dataProject = (p) => {
         maxDate = days;
       }
     });
-    //console.log("min ", minDate, " max ", maxDate);
     // Fill dictionary with an initial count of 0 for all days
     for (let i = 0; i <= p.abs(minDate) + maxDate; i++) {
       tasksPerDay[i] = 0;
     }
-    taskArr.forEach((task, index) => {
+    taskArr.forEach((task) => {
       let days = Number(task["Days Left"]);
       if (days != EMPTY_DAY) {
         // Normalize the day so that minDate is technically 0
@@ -181,8 +151,6 @@ let dataProject = (p) => {
         tasksPerDay[days] += 1;
       }
     });
-    //console.log(tasksPerDay)
-
     // Draw line graph
     p.noFill();
     p.stroke(lineColor);
@@ -222,7 +190,7 @@ let dataProject = (p) => {
       Jack: [],
       ALL: [],
     };
-    taskArr.forEach((task, index) => {
+    taskArr.forEach((task) => {
       let assignedStr = task["Team Member(s) Assigned"];
       let assignedArr = assignedStr.split(",");
       if (assignedStr != "") {
@@ -231,7 +199,6 @@ let dataProject = (p) => {
         });
       }
     });
-    console.log(taskDict);
     // Create dropdown of each key from taskDict
     teamSelect = p.createSelect();
     teamSelect.position(cWidth / 2 - teamSelect.elt.getBoundingClientRect().width+25, cHeight / 2 +25);
