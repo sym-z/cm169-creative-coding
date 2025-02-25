@@ -1,6 +1,9 @@
 // sketch.js - A Glance into my Capstone Project
 // Author: Jack Sims
 // Date: February 24, 2025
+
+// ChatGPT helped with the foundations of some of the code in this script. Here is the conversation I used.
+// Convo Link: https://chatgpt.com/share/67bd16ba-2510-800b-849b-07a116df827d
 let table;
 let taskArr = [];
 // For Menu Choices
